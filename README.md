@@ -33,3 +33,5 @@ cb = () -> Flux.reset!(model)
 
 Flux.@epochs 10 Flux.train!(loss, params(model), repeat([(x, y)], 100), opt, cb = cb)
 ```
+
+Note that `TrackerFlux` will overload `Flux.Zygote.gradient` to avoid repetitive definition of `Flux.train!` therefore you cannot use `Zygote.gradient` after importing `TrackerFlux`.
