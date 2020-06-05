@@ -9,9 +9,14 @@ using Flux
 x = randn(Float32, 10, 1, 100)
 y = mean(x, dims = 1)
 
+θ0, re = Flux.destructure(Dense(2, 1))
+@test Tracker.gradient(θ0) do θ
+    sum(re(θ)([0.5, 2.0]))
+end[1].data == [0.5, 2.0, 1]
+
 model = Chain(LSTM(10, 100), LSTM(100, 1)) |> TrackerFlux.track
-θ, re = Flux.destructure(model)
-@test Flux.destructure(re(θ))[1] == θ
+θ0, re = Flux.destructure(model)
+@test Flux.destructure(re(θ0))[1] == θ0
 
 model(x[:, :, 1])
 @test Tracker.istracked(model[1].state[1])
