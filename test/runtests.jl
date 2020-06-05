@@ -22,6 +22,7 @@ model(x[:, :, 1])
 @test Tracker.istracked(model[1].state[1])
 Flux.truncate!(model)
 @test !Tracker.istracked(model[1].state[1])
+@test !Tracker.istracked(TrackerFlux.untrack(model)[1].cell.Wh)
 
 function loss(x, y)
     xs = Flux.unstack(x, 3)
