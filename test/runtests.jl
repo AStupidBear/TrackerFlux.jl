@@ -34,13 +34,11 @@ function loss(x, y)
     end
     return l / length(ŷs)
 end
-
+ps = Flux.params(model)
+data = repeat([(x, y)], 100)
 opt = ADAMW(1e-3, (0.9, 0.999), 1e-4)
-
 cb = () -> Flux.reset!(model)
-
-Flux.@epochs 10 Flux.train!(loss, params(model), repeat([(x, y)], 100), opt, cb = cb)
-
+Flux.@epochs 10 Flux.train!(loss, ps, data, opt, cb = cb)
 @test loss(x, y) < 0.02
 
 end
