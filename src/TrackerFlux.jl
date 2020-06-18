@@ -34,6 +34,10 @@ function Flux.destructure(m)
     return Flux.param(θ), re
 end
 
+function overload_gradient()
+    @eval Flux.gradient(f, args...) = Tracker.gradient(f, args...)
+end
+
 function __init__()
     @eval Flux truncate! = $truncate!
 end

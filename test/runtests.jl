@@ -1,8 +1,11 @@
 using Test
 using Statistics
+using Random
 using TrackerFlux
 using Tracker
 using Flux
+
+Random.seed!(1234)
 
 @testset "TrackerFlux.jl" begin
 
@@ -38,6 +41,7 @@ ps = Flux.params(model)
 data = repeat([(x, y)], 100)
 opt = ADAMW(1e-3, (0.9, 0.999), 1e-4)
 cb = () -> Flux.reset!(model)
+TrackerFlux.overload_gradient()
 Flux.@epochs 10 Flux.train!(loss, ps, data, opt, cb = cb)
 @test loss(x, y) < 0.02
 

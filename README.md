@@ -30,7 +30,6 @@ ps = Flux.params(model)
 data = repeat([(x, y)], 100)
 opt = ADAMW(1e-3, (0.9, 0.999), 1e-4)
 cb = () -> Flux.reset!(model)
+TrackerFlux.overload_gradient()
 Flux.@epochs 10 Flux.train!(loss, ps, data, opt, cb = cb)
 ```
-
-Note that `TrackerFlux` will overload `Flux.Zygote.gradient` to avoid repetitive definition of `Flux.train!` therefore you cannot use `Zygote.gradient` after importing `TrackerFlux`.
