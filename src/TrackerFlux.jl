@@ -4,7 +4,6 @@ using Flux, Tracker
 
 Flux.data(x) = Tracker.data(x)
 Flux.param(x) = Tracker.param(x)
-Flux.gradient(f, args...) = Tracker.gradient(f, args...)
 
 track(m) = fmap(x -> x isa AbstractArray ? Flux.param(x) : x, m)
 untrack(m) = fmap(Flux.data, m)
