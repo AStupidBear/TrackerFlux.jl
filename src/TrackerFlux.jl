@@ -2,9 +2,7 @@ module TrackerFlux
 
 using Flux, Tracker
 
-Flux.param(x) = Tracker.param(x)
-
-track(m) = fmap(x -> x isa AbstractArray ? Flux.param(x) : x, m)
+track(m) = fmap(x -> x isa AbstractArray ? Tracker.param(x) : x, m)
 untrack(m) = fmap(Tracker.data, m)
 
 function Flux.Optimise.update!(opt, xs::Tracker.Params, gs)
@@ -29,7 +27,7 @@ function Flux.destructure(m)
     end
     θ = vcat(vec.(Tracker.data.(xs))...)
     re = p -> Flux._restructure(m, p)
-    return Flux.param(θ), re
+    return Tracker.param(θ), re
 end
 
 function overload_gradient()
