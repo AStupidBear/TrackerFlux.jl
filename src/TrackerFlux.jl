@@ -19,17 +19,6 @@ _truncate(x::Tuple) = _truncate.(x)
 truncate!(m::Flux.Recur) = (m.state = _truncate(m.state))
 truncate!(m) = foreach(truncate!, Flux.functor(m)[1])
 
-function Flux.destructure(m)
-    xs = []
-    fmap(m) do x
-        x isa AbstractArray && push!(xs, x)
-        return x
-    end
-    θ = vcat(vec.(Tracker.data.(xs))...)
-    re = p -> Flux._restructure(m, p)
-    return Tracker.param(θ), re
-end
-
 function overload_gradient()
     @eval Flux.gradient(f, args...) = Tracker.gradient(f, args...)
 end
