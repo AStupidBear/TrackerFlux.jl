@@ -4,6 +4,8 @@ using Random
 using TrackerFlux
 using Tracker
 using Flux
+using Pkg
+using UUIDs
 
 Random.seed!(1234)
 
@@ -24,7 +26,8 @@ model = Chain(LSTM(10, 100), LSTM(100, 1)) |> TrackerFlux.track
 model(x[:, :, 1])
 @test Tracker.istracked(model[1].state[1])
 Flux.truncate!(model)
-@test !Tracker.istracked(model[1].state[1])
+ver = Pkg.dependencies()[UUID("587475ba-b771-5e3f-ad9e-33799f191a9c")].version
+ver < v"0.12" && @test !Tracker.istracked(model[1].state[1])
 @test !Tracker.istracked(TrackerFlux.untrack(model)[1].cell.Wh)
 
 function loss(x, y)
